@@ -11,10 +11,13 @@ window.onload = function() {
   var asteroids = [];
   var score = 0;
   var gameOver = false;
-  var lastTime = 0;
+  //var lastTime = 0;
   var asteroidSpawnRate = 2000;
   var lastAsteroidTime = 0;
   var asteroidSpeed = 1;
+  var MAX_ASTEROID_SPEED = 12;
+  var asteroidsNumber = 0;
+
 
   function spawnAsteroid() {
     var size = Math.random() * 20 + 10;
@@ -38,12 +41,15 @@ window.onload = function() {
     cannonBullets.push({ x: cannon.x, y: cannon.y - cannon.height, speed: 5, size: 2 });
   });
 
-  function update(deltaTime) {
+  function update() {
     if (Date.now() - lastAsteroidTime > asteroidSpawnRate) {
       spawnAsteroid();
+      asteroidsNumber += 1;
       lastAsteroidTime = Date.now();
     }
 
+    asteroidSpeed = Math.sqrt(asteroidsNumber);
+    asteroidSpeed = Math.min(asteroidSpeed, MAX_ASTEROID_SPEED);
     for (var i = asteroids.length - 1; i >= 0; i--) {
       var asteroid = asteroids[i];
       asteroid.y += asteroidSpeed;
@@ -110,13 +116,9 @@ window.onload = function() {
     }
   }
 
-  function gameLoop(timestamp) {
-    if (!lastTime) lastTime = timestamp;
-    var deltaTime = (timestamp - lastTime) / 1000;
-    lastTime = timestamp;
-
+  function gameLoop() {
     if (!gameOver) {
-      update(deltaTime);
+      update();
       render();
     }
     requestAnimationFrame(gameLoop);
