@@ -33,6 +33,10 @@ window.onload = function() {
     return distance < obj1.size / 2 + obj2.size / 2;
   }
 
+  function checkCollisionWithBase(asteroid, base) {
+    return asteroid.y >= base.y;
+  }
+
   canvas.addEventListener('mousemove', function(event) {
     cannon.x = event.clientX;
   });
@@ -54,7 +58,7 @@ window.onload = function() {
       var asteroid = asteroids[i];
       asteroid.y += asteroidSpeed;
 
-      if (checkCollision(asteroid, base)) {
+      if (checkCollisionWithBase(asteroid, base)) {
         gameOver = true;
         break;
       }
